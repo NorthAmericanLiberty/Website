@@ -79,7 +79,17 @@ footer .rule{border-top:3px double var(--blue);margin-bottom:20px}
 footer .name{font-family:'Libre Baskerville',Georgia,serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
 footer a{display:inline-block;padding:4px 0}
 footer .small{font-size:15px;color:#555;margin-top:14px}
+.consent{position:fixed;left:0;right:0;bottom:0;z-index:50;background:#FFF;border-top:3px double var(--blue);box-shadow:0 -6px 20px rgba(20,42,117,.12);padding:16px 0 calc(16px + env(safe-area-inset-bottom,0px))}
+.consent .wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.consent p{margin:0;flex:1 1 360px;font-size:17px;color:var(--body)}
+.consent .btns{display:flex;gap:10px;flex:0 0 auto}
+.consent .btn{min-height:46px;padding:0 22px}
+.btn.outline{background:#FFF;color:var(--blue);border:1px solid var(--blue)}
+.btn.outline:hover{background:var(--tint);color:var(--blue-dark)}
+.linkbtn{background:none;border:none;padding:4px 0;font:inherit;font-size:15px;color:var(--blue);text-decoration:underline;cursor:pointer}
 @media (max-width:640px){
+  .consent .btns{width:100%}
+  .consent .btn{flex:1}
   .band-grid,.steps,.fields{grid-template-columns:1fr}
   .band-grid{gap:22px}
   nav{gap:18px}
@@ -208,9 +218,66 @@ footer .small{font-size:15px;color:#555;margin-top:14px}
 <div class="name">North American Liberty</div>
 <div><a href="tel:6298677363">(629) 867-7363</a></div>
 <div><a href="mailto:NorthAmericanLiberty@gmail.com">NorthAmericanLiberty@gmail.com</a></div>
-<div class="small">© 2026 North American Liberty</div>
+<div class="small">© 2026 North American Liberty · <a href="privacy.html">Privacy</a><span id="cookie-link-wrap" hidden> · <button type="button" class="linkbtn" id="cookie-settings">Cookie settings</button></span></div>
 </footer>
 </div>
 <div class="bar"></div>
+
+<div class="consent" id="consent" role="region" aria-label="Cookie choice" hidden>
+<div class="wrap">
+<p>We use analytics cookies to see which pages are useful and how visitors find us. They only turn on if you accept. <a href="privacy.html">Privacy details</a></p>
+<div class="btns">
+<button type="button" class="btn outline" id="consent-deny">Decline</button>
+<button type="button" class="btn" id="consent-accept">Accept</button>
+</div>
+</div>
+</div>
+
+<script>
+/* Analytics load ONLY after a visitor clicks Accept. Paste the Google Analytics ID (starts with G-) below to turn this on. */
+(function(){
+  var GA_ID = "";
+  var KEY = "nal-cookie-consent";
+  var banner = document.getElementById("consent");
+  if(!GA_ID) return;
+  document.getElementById("cookie-link-wrap").hidden = false;
+  function get(){ try{ return localStorage.getItem(KEY); }catch(e){ return null; } }
+  function set(v){ try{ localStorage.setItem(KEY, v); }catch(e){} }
+  function loadAnalytics(){
+    if(window.__gaLoaded) return; window.__gaLoaded = true;
+    var s = document.createElement("script");
+    s.async = true; s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag("js", new Date());
+    gtag("config", GA_ID, { anonymize_ip: true });
+  }
+  function clearAnalyticsCookies(){
+    document.cookie.split(";").forEach(function(c){
+      var name = c.split("=")[0].trim();
+      if(/^_ga/.test(name) || /^_gid/.test(name)){
+        var host = location.hostname, parts = host.split(".");
+        [host, "." + host, "." + parts.slice(-2).join(".")].forEach(function(d){
+          document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=" + d;
+        });
+        document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+      }
+    });
+  }
+  var choice = get();
+  if(choice === "granted") loadAnalytics();
+  else if(choice !== "denied") banner.hidden = false;
+  document.getElementById("consent-accept").addEventListener("click", function(){
+    set("granted"); banner.hidden = true; loadAnalytics();
+  });
+  document.getElementById("consent-deny").addEventListener("click", function(){
+    var wasOn = window.__gaLoaded;
+    set("denied"); banner.hidden = true; clearAnalyticsCookies();
+    if(wasOn) location.reload();
+  });
+  document.getElementById("cookie-settings").addEventListener("click", function(){ banner.hidden = false; });
+})();
+</script>
 </body>
 </html>
