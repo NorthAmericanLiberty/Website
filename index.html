@@ -91,7 +91,18 @@ footer .small{font-size:15px;color:#555;margin-top:14px}
 .btn.outline{background:#FFF;color:var(--blue);border:1px solid var(--blue)}
 .btn.outline:hover{background:var(--tint);color:var(--blue-dark)}
 .linkbtn{background:none;border:none;padding:4px 0;font:inherit;font-size:15px;color:var(--blue);text-decoration:underline;cursor:pointer}
+.ai{background:var(--tint);border-top:3px double var(--blue);border-bottom:1px solid var(--blue);padding:36px 28px 34px}
+.ai .intro{font-style:italic;color:var(--body);text-align:center;max-width:640px;margin:0 auto 26px}
+.ai-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px}
+.ai-item{padding:16px 0;border-top:1px solid var(--rule)}
+.ai-item h3{font-family:'Libre Baskerville',Georgia,serif;font-size:18px;margin:0 0 4px;color:#111}
+.ai-item p{margin:0;color:var(--body)}
+.ai-promise{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:24px 0 26px;padding-top:20px;border-top:1px solid var(--blue);text-align:center}
+.ai-promise b{display:block;font-family:'Libre Baskerville',Georgia,serif;font-weight:400;color:var(--blue);font-size:17px}
+.ai-promise span{font-size:16px;color:var(--body)}
 @media (max-width:640px){
+  .ai{padding:28px 18px}
+  .ai-grid,.ai-promise{grid-template-columns:1fr}
   .consent .btns{width:100%}
   .consent .btn{flex:1}
   .band-grid,.steps,.fields{grid-template-columns:1fr}
@@ -110,6 +121,7 @@ footer .small{font-size:15px;color:#555;margin-top:14px}
 <div class="sub">Business Solutions · Est. 2026</div>
 <nav aria-label="Main">
 <a href="#services">Services</a>
+<a href="#ai">AI</a>
 <a href="#about">About</a>
 <a href="#contact">Contact</a>
 </nav>
@@ -151,6 +163,26 @@ footer .small{font-size:15px;color:#555;margin-top:14px}
 </div>
 </section>
 
+<section id="ai">
+<div class="ai">
+<div class="eyebrow center">Focus · AI Integration</div>
+<h2 class="center" style="margin-bottom:14px">AI that fits the way you already work</h2>
+<p class="intro">No overhaul, no jargon. We find the few places where AI saves you real time, set it up with you, and make sure you are comfortable using it.</p>
+<div class="ai-grid">
+<div class="ai-item"><h3>Quotes and Estimates</h3><p>Turn rough notes into clean, professional quotes and proposals in minutes.</p></div>
+<div class="ai-item"><h3>Customer Replies</h3><p>Fast, friendly answers to texts, emails and reviews, written in your voice.</p></div>
+<div class="ai-item"><h3>Marketing Made Easy</h3><p>Social posts, website updates and promotions, drafted for you to approve.</p></div>
+<div class="ai-item"><h3>Office Busywork</h3><p>Job summaries, checklists, follow-up reminders and everyday paperwork, handled faster.</p></div>
+</div>
+<div class="ai-promise">
+<div><b>Start Small</b><span>One or two tools you will actually use</span></div>
+<div><b>Plain Training</b><span>Shown step by step, with a printed reference sheet</span></div>
+<div><b>Your Business First</b><span>You stay in control of every message</span></div>
+</div>
+<div class="center"><a class="btn" href="#contact" data-interest="AI Integration">Ask About AI Integration</a></div>
+</div>
+</section>
+
 <section id="about">
 <div class="founder">
 <div class="eyebrow">From the Founder</div>
@@ -186,7 +218,7 @@ footer .small{font-size:15px;color:#555;margin-top:14px}
 <div class="choices">
 <label class="choice"><input type="radio" name="interest" value="Website" checked><span>Website</span></label>
 <label class="choice"><input type="radio" name="interest" value="Google Listing"><span>Google Listing</span></label>
-<label class="choice"><input type="radio" name="interest" value="AI Tools"><span>AI Tools</span></label>
+<label class="choice"><input type="radio" name="interest" value="AI Integration"><span>AI Integration</span></label>
 <label class="choice"><input type="radio" name="interest" value="Follow-Up"><span>Follow-Up</span></label>
 <label class="choice"><input type="radio" name="interest" value="Custom Project"><span>Custom Project</span></label>
 </div>
@@ -201,6 +233,12 @@ footer .small{font-size:15px;color:#555;margin-top:14px}
 </div>
 <p id="form-error" hidden style="text-align:center;color:#A3261F;margin:14px 0 0">Something went wrong sending your request. Please call (629) 867-7363 or email NorthAmericanLiberty@gmail.com.</p>
 <script>
+document.querySelectorAll('[data-interest]').forEach(function(a){
+  a.addEventListener('click',function(){
+    var r=document.querySelector('input[name="interest"][value="'+a.getAttribute('data-interest')+'"]');
+    if(r) r.checked=true;
+  });
+});
 (function(){
   var form=document.getElementById('review-form');
   if(!form||!window.fetch) return;
