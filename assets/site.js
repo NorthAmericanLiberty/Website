@@ -1,7 +1,15 @@
-/* Duck River Concrete Texas site script: gallery, quote form, click tracking, cookie consent. */
+/* North American Liberty site script: forms, click tracking, cookie consent. */
 (function(){
   /* Send an analytics event only if the visitor accepted analytics (gtag exists). */
   function track(name, params){ if(window.gtag){ try{ window.gtag("event", name, params || {}); }catch(e){} } }
+
+  /* Buttons with data-interest pre-select that option in the form. */
+  document.querySelectorAll("[data-interest]").forEach(function(a){
+    a.addEventListener("click", function(){
+      var r = document.querySelector('input[name="interest"][value="' + a.getAttribute("data-interest") + '"]');
+      if(r) r.checked = true;
+    });
+  });
 
   /* Call and text taps. */
   document.addEventListener("click", function(e){
@@ -12,37 +20,8 @@
     else if(h.indexOf("sms:") === 0) track("text_click", {link_location: a.dataset.loc || "page"});
   });
 
-  /* Gallery filters. */
-  var items = document.querySelectorAll(".gallery a");
-  document.querySelectorAll(".filters button").forEach(function(b){
-    b.addEventListener("click", function(){
-      document.querySelectorAll(".filters button").forEach(function(x){ x.classList.remove("on"); });
-      b.classList.add("on");
-      var f = b.getAttribute("data-f");
-      items.forEach(function(a){
-        a.hidden = !(f === "all" || (" " + a.getAttribute("data-c") + " ").indexOf(" " + f + " ") > -1);
-      });
-    });
-  });
-
-  /* Photo viewer. */
-  var dlg = document.getElementById("viewer");
-  if(dlg && dlg.showModal){
-    var big = dlg.querySelector("img");
-    items.forEach(function(a){
-      a.addEventListener("click", function(e){
-        e.preventDefault();
-        big.src = a.getAttribute("href");
-        big.alt = a.querySelector("img").alt;
-        dlg.showModal();
-      });
-    });
-    dlg.querySelector(".close").addEventListener("click", function(){ dlg.close(); });
-    dlg.addEventListener("click", function(e){ if(e.target === dlg || e.target === big) dlg.close(); });
-  }
-
-  /* Quote form (Formspree). */
-  document.querySelectorAll("form.lead-form").forEach(function(form){
+  /* Audit request forms (Formspree). */
+  document.querySelectorAll("form.audit-form").forEach(function(form){
     if(!window.fetch) return;
     var box = form.parentNode;
     form.addEventListener("submit", function(e){
@@ -56,7 +35,7 @@
           track("generate_lead", {form_page: location.pathname});
         })
         .catch(function(){
-          btn.disabled = false; btn.textContent = "Send";
+          btn.disabled = false; btn.textContent = "Request My Free Audit";
           box.querySelector(".form-error").hidden = false;
         });
     });
@@ -64,7 +43,7 @@
 
   /* Analytics load ONLY after a visitor clicks Accept. */
   var GA_ID = "G-YPLW0ZJBNJ";
-  var KEY = "drc-cookie-consent";
+  var KEY = "nal-cookie-consent";
   var banner = document.getElementById("consent");
   if(!GA_ID || !banner) return;
   var linkWrap = document.getElementById("cookie-link-wrap");
